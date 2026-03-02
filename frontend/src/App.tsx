@@ -7,20 +7,26 @@ type ApiResponse = {
 function App() {
   const [message, setMessage] = useState<string>("Cargando...");
 
+  // Obtener la URL del backend desde la variable de entorno
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/test");
+        const res = await fetch(`${apiUrl}/api/test`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
         const data: ApiResponse = await res.json();
         setMessage(data.message);
       } catch (error) {
-        console.error(error);
+        console.error("Error conectando al backend:", error);
         setMessage("Error conectando al backend");
       }
     };
 
     fetchData();
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div style={{ padding: 40 }}>
