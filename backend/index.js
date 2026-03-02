@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(frontendPath));
 
   // Solo redirigir al index.html rutas que **no sean /api**
-  app.get("/*", (req, res, next) => {
+  app.use((req, res, next) => {
     if (req.path.startsWith("/api")) return next();
     res.sendFile(path.join(frontendPath, "index.html"));
   });
